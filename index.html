@@ -69,8 +69,8 @@
         </div>
     </main>
 
-    <div id="pipeline-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden z-50 transition-opacity duration-200">
-        <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden transform scale-95 transition-transform duration-200">
+    <div id="pipeline-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-lg overflow-hidden">
             <div class="bg-slate-950 text-white px-6 py-4 flex justify-between items-center">
                 <div>
                     <h3 id="modal-job-title" class="font-bold text-base">Job Title</h3>
@@ -80,8 +80,7 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="p-6 space-y-4" id="modal-stages-list">
-                </div>
+            <div class="p-6 space-y-4" id="modal-stages-list"></div>
             <div class="bg-slate-50 px-6 py-3.5 border-t border-slate-100 flex justify-end">
                 <button onclick="closeModal()" class="px-4 py-2 bg-slate-800 text-white hover:bg-slate-700 text-xs font-bold rounded-lg transition cursor-pointer">
                     Close View
@@ -95,7 +94,6 @@
          * =========================================================================
          * YOUR MASTER INPUT DATA
          * Edit this text array directly to add, remove, or modify roles.
-         * For each role, update the stageCounts to reflect your actual candidate pool.
          * =========================================================================
          */
         const candidateRequisitions = [
@@ -143,14 +141,13 @@
                     "Criteria": 3,
                     "Phone": 5,
                     "Departmental": 1,
-                    "Final: Layout Review": 0,
                     "Final": 0,
                     "Offer": 0
                 }
             }
         ];
 
-        // Pipeline styling
+        // Pipeline color badging configuration mapping
         const phaseBadges = {
             "Application": "bg-blue-50 text-blue-700 border-blue-200",
             "Criteria": "bg-purple-50 text-purple-700 border-purple-200",
@@ -208,76 +205,4 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 transition text-sm";
                 tr.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-sky-600 hover:text-sky-800 transition cursor-pointer underline decoration-sky-200 underline-offset-4" onclick="openModal(${index})">
-                        ${item.jobTitle}
-                    </td>
-                    <td class="px-6 py-4 text-slate-600 font-medium">${item.openings}</td>
-                    <td class="px-6 py-4 text-slate-600 font-medium">${item.hiringManager}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">
-                            ${item.phase}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 font-mono text-slate-500 text-xs">${item.compensation}</td>
-                    <td class="px-6 py-4 text-slate-600 font-medium">
-                        <i class="fa-regular fa-calendar text-slate-400 mr-1.5 text-xs"></i> ${item.targetStartDate}
-                    </td>
-                `;
-                rowContainer.appendChild(tr);
-            });
-        }
-
-        // Modal Interactive Controller Actions
-        function openModal(index) {
-            const item = candidateRequisitions[index];
-            if (!item) return;
-
-            document.getElementById('modal-job-title').innerText = item.jobTitle;
-            const stagesList = document.getElementById('modal-stages-list');
-            stagesList.innerHTML = '';
-
-            const stagesOrder = ["Application", "Criteria", "Phone", "Departmental", "Final", "Offer"];
-            
-            // Determine maximum value for progress bar proportions
-            const counts = Object.values(item.stageCounts || {});
-            const maxVal = Math.max(...counts, 1);
-
-            stagesOrder.forEach(stage => {
-                const count = (item.stageCounts && item.stageCounts[stage] !== undefined) ? item.stageCounts[stage] : 0;
-                const colors = stageColors[stage] || { text: "text-slate-700", bg: "bg-slate-50", progress: "bg-slate-500" };
-                const percentage = (count / maxVal) * 100;
-
-                const stageRow = document.createElement('div');
-                stageRow.className = "flex flex-col space-y-1.5";
-                stageRow.innerHTML = `
-                    <div class="flex justify-between text-xs font-semibold">
-                        <span class="${colors.text} px-2 py-0.5 ${colors.bg} rounded-md border border-current/10">${stage}</span>
-                        <span class="text-slate-700 font-bold font-mono">${count} active</span>
-                    </div>
-                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                        <div class="${colors.progress} h-full rounded-full transition-all duration-300" style="width: ${percentage}%"></div>
-                    </div>
-                `;
-                stagesList.appendChild(stageRow);
-            });
-
-            const modal = document.getElementById('pipeline-modal');
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('pipeline-modal').classList.add('hidden');
-        }
-
-        // Close modal if user clicks gray background
-        window.onclick = function(event) {
-            const modal = document.getElementById('pipeline-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', buildDashboard);
-    </script>
-</body>
-</html>
+                    <td class="px-6 py-4 font-bold text-sky-600 hover:text-sky-8
