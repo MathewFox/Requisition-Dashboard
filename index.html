@@ -121,12 +121,11 @@
             
             if (!rowContainer || !metricsContainer) return;
 
-            // Bulletproof Calculation Loop
+            // Mathematical sum calculations
             let totalActive = 0;
             let totalOffers = 0;
 
             candidateRequisitions.forEach(item => {
-                // Safeguard: Ensure values turn into real mathematical integers
                 const count = parseInt(item.openings, 10) || 0;
                 totalActive += count;
 
