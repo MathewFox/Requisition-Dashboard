@@ -43,6 +43,7 @@
                     <thead>
                         <tr class="bg-slate-100/70 text-slate-500 uppercase text-xs tracking-wider font-semibold border-b border-slate-200">
                             <th class="px-6 py-4">Job Title</th>
+                            <th class="px-6 py-4">Openings</th>
                             <th class="px-6 py-4">Hiring Manager</th>
                             <th class="px-6 py-4">Current Candidate Phase</th>
                             <th class="px-6 py-4">Compensation Range</th>
@@ -75,34 +76,25 @@
          * =========================================================================
          * YOUR MASTER INPUT DATA
          * Edit this text array directly to add, remove, or modify roles.
-         * The phases MUST be: "Application", "Criteria", "Phone", "Departmental", "Final", or "Offer"
          * =========================================================================
          */
         const candidateRequisitions = [
             {
                 jobTitle: "(Sr.) Project Manager",
-                hiringManager: "Bri MacBlane",
                 openings: 1,
+                hiringManager: "Bri MacBlane",
                 phase: "Departmental",
                 compensation: "$74,000 - $112,000",
                 targetStartDate: "06/15/2026"
             },
             {
                 jobTitle: "SEO Analyst",
-                hiringManager: "Dan Heil",
                 openings: 1,
+                hiringManager: "Dan Heil",
                 phase: "Application",
                 compensation: "$65,000 - $85,000",
                 targetStartDate: "07/01/2026"
-            },
-{
-                jobTitle: "(Sr.) Digital Content Specialist,
-                hiringManager: "Bri MacBlane",
-                openings: 2,
-                phase: “Applicationl",
-                compensation: "$74,000 - $112,000",
-                targetStartDate: "06/15/2026"
-            },
+            }
         ];
 
         // Pipeline color badging styles mapping
@@ -119,6 +111,8 @@
             const rowContainer = document.getElementById('dashboard-rows');
             const metricsContainer = document.getElementById('metrics-panel');
             
+            if (!rowContainer || !metricsContainer) return;
+
             // Generate summary boxes
             const totalActive = candidateRequisitions.length;
             const offerStage = candidateRequisitions.filter(r => r.phase === "Offer").length;
@@ -147,6 +141,7 @@
                 tr.className = "hover:bg-slate-50/80 transition text-sm";
                 tr.innerHTML = `
                     <td class="px-6 py-4 font-bold text-slate-900">${item.jobTitle}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${item.openings}</td>
                     <td class="px-6 py-4 text-slate-600 font-medium">${item.hiringManager}</td>
                     <td class="px-6 py-4">
                         <span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">
