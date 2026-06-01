@@ -122,9 +122,9 @@
             if (!rowContainer || !metricsContainer) return;
 
             // Generate summary boxes
-            const totalActive = candidateRequisitions.length;
-            const offerStage = candidateRequisitions.filter(r => r.phase === "Offer").length;
-
+const totalActive = candidateRequisitions.reduce((sum, item) => sum + Number(item.openings || 0), 0);
+const offerStage = candidateRequisitions.filter(r => r.phase === "Offer").length;
+            
             metricsContainer.innerHTML = `
                 <div class="bg-white p-5 rounded-xl border border-slate-200">
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Open Requisitions</p>
