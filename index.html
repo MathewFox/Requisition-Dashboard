@@ -104,14 +104,12 @@
                 phase: "Departmental",
                 compensation: "$74,000 - $112,000",
                 targetStartDate: "06/15/2026",
-                stageCounts: {
-                    "Application": 14,
-                    "Criteria": 5,
-                    "Phone": 3,
-                    "Departmental": 2,
-                    "Final": 1,
-                    "Offer": 0
-                }
+                appCount: 14,
+                critCount: 5,
+                phoneCount: 3,
+                deptCount: 2,
+                finalCount: 1,
+                offerCount: 0
             },
             {
                 jobTitle: "SEO Analyst",
@@ -120,14 +118,12 @@
                 phase: "Application",
                 compensation: "$65,000 - $85,000",
                 targetStartDate: "07/01/2026",
-                stageCounts: {
-                    "Application": 22,
-                    "Criteria": 8,
-                    "Phone": 4,
-                    "Departmental": 0,
-                    "Final": 0,
-                    "Offer": 0
-                }
+                appCount: 22,
+                critCount: 8,
+                phoneCount: 4,
+                deptCount: 0,
+                finalCount: 0,
+                offerCount: 0
             },
             {
                 jobTitle: "(Sr.) Digital Content Specialist",
@@ -136,14 +132,12 @@
                 phase: "Phone",
                 compensation: "$55,000 - $84,000",
                 targetStartDate: "07/15/2026",
-                stageCounts: {
-                    "Application": 9,
-                    "Criteria": 3,
-                    "Phone": 5,
-                    "Departmental": 1,
-                    "Final": 0,
-                    "Offer": 0
-                }
+                appCount: 9,
+                critCount: 3,
+                phoneCount: 5,
+                deptCount: 1,
+                finalCount: 0,
+                offerCount: 0
             }
         ];
 
@@ -205,4 +199,78 @@
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 transition text-sm";
                 tr.innerHTML = `
-                    <td class="px-6 py-4 font-bold text-sky-600 hover:text-sky-8
+                    <td class="px-6 py-4 font-bold text-sky-600 hover:text-sky-800 transition cursor-pointer underline decoration-sky-200 underline-offset-4" onclick="openModal(${index})">
+                        ${item.jobTitle}
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${item.openings}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${item.hiringManager}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">
+                            ${item.phase}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-slate-500 text-xs">${item.compensation}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">
+                        <i class="fa-regular fa-calendar text-slate-400 mr-1.5 text-xs"></i> ${item.targetStartDate}
+                    </td>
+                `;
+                rowContainer.appendChild(tr);
+            });
+        }
+
+        function openModal(index) {
+            const item = candidateRequisitions[index];
+            if (!item) return;
+
+            document.getElementById('modal-job-title').innerText = item.jobTitle;
+            const stagesList = document.getElementById('modal-stages-list');
+            stagesList.innerHTML = '';
+
+            const stagesOrder = [
+                { name: "Application", count: parseInt(item.appCount, 10) || 0 },
+                { name: "Criteria", count: parseInt(item.critCount, 10) || 0 },
+                { name: "Phone", count: parseInt(item.phoneCount, 10) || 0 },
+                { name: "Departmental", count: parseInt(item.deptCount, 10) || 0 },
+                { name: "Final", count: parseInt(item.finalCount, 10) || 0 },
+                { name: "Offer", count: parseInt(item.offerCount, 10) || 0 }
+            ];
+            
+            const maxVal = Math.max(...stagesOrder.map(s => s.count), 1);
+
+            stagesOrder.forEach(stage => {
+                const colors = stageColors[stage.name] || { text: "text-slate-700", bg: "bg-slate-50", progress: "bg-slate-500" };
+                const percentage = (stage.count / maxVal) * 100;
+
+                const stageRow = document.createElement('div');
+                stageRow.className = "flex flex-col space-y-1.5";
+                stageRow.innerHTML = `
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="${colors.text} px-2 py-0.5 ${colors.bg} rounded-md border border-current/10">${stage.name}</span>
+                        <span class="text-slate-700 font-bold font-mono">${stage.count} active</span>
+                    </div>
+                    <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                        <div class="${colors.progress} h-full rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                `;
+                stagesList.appendChild(stageRow);
+            });
+
+            document.getElementById('pipeline-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('pipeline-modal').classList.add('hidden');
+        }
+
+        // Close on background click safely
+        document.body.addEventListener('click', function(event) {
+            const modal = document.getElementById('pipeline-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', buildDashboard);
+    </script>
+</body>
+</html>
