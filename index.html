@@ -121,4 +121,61 @@
             
             if (!rowContainer || !metricsContainer) return;
 
-            // Generate summary boxes using sum of cumulative
+            // Bulletproof Calculation Loop
+            let totalActive = 0;
+            let totalOffers = 0;
+
+            candidateRequisitions.forEach(item => {
+                // Safeguard: Ensure values turn into real mathematical integers
+                const count = parseInt(item.openings, 10) || 0;
+                totalActive += count;
+
+                if (item.phase === "Offer") {
+                    totalOffers += count;
+                }
+            });
+            
+            metricsContainer.innerHTML = `
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Open Requisitions</p>
+                    <p class="text-2xl font-black text-slate-800 mt-1">${totalActive}</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Offers Out</p>
+                    <p class="text-2xl font-black text-emerald-600 mt-1">${totalOffers}</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Input Source Control</p>
+                    <p class="text-sm font-semibold text-slate-700 mt-2 flex items-center"><i class="fa-solid fa-lock-open text-sky-500 mr-2"></i> Manual Active</p>
+                </div>
+            `;
+
+            // Populate table rows dynamically
+            rowContainer.innerHTML = '';
+            candidateRequisitions.forEach(item => {
+                const styleClass = phaseBadges[item.phase] || "bg-slate-100 text-slate-700 border-slate-200";
+                
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition text-sm";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-bold text-slate-900">${item.jobTitle}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${item.openings}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">${item.hiringManager}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">
+                            ${item.phase}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-slate-500 text-xs">${item.compensation}</td>
+                    <td class="px-6 py-4 text-slate-600 font-medium">
+                        <i class="fa-regular fa-calendar text-slate-400 mr-1.5 text-xs"></i> ${item.targetStartDate}
+                    </td>
+                `;
+                rowContainer.appendChild(tr);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', buildDashboard);
+    </script>
+</body>
+</html>
