@@ -22,7 +22,7 @@
             </div>
             <div class="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800 text-xs text-slate-400">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>View-Only Mode</span>
+                <span>Manual Active (View-Only)</span>
             </div>
         </div>
     </header>
@@ -42,6 +42,7 @@
                     <thead>
                         <tr class="bg-slate-100/70 text-slate-500 uppercase text-xs tracking-wider font-semibold border-b border-slate-200">
                             <th class="px-6 py-4">Job Title</th>
+                            <th class="px-6 py-4">Open Date</th>
                             <th class="px-6 py-4">Openings</th>
                             <th class="px-6 py-4">Hiring Manager</th>
                             <th class="px-6 py-4">Current Lead Phase</th>
@@ -93,15 +94,16 @@
         /**
          * =========================================================================
          * YOUR MASTER INPUT DATA
-         * Edit this text array directly to add, remove, or modify roles.
+         * Edit this text array directly to add, remove, or modify roles manually.
          * =========================================================================
          */
         const candidateRequisitions = [
             {
                 jobTitle: "(Sr.) Project Manager",
+                openDate: "05/10/2026",
                 openings: 1,
                 hiringManager: "Bri MacBlane",
-                phase: "Departmental",
+                phase: "Departmental", // <-- Keep this updated as the furthest active stage
                 compensation: "$74,000 - $112,000",
                 targetStartDate: "06/15/2026",
                 appCount: 14,
@@ -113,20 +115,22 @@
             },
             {
                 jobTitle: "SEO Analyst",
+                openDate: "05/18/2026",
                 openings: 1,
                 hiringManager: "Dan Heil",
-                phase: "Application",
+                phase: "Departmental", // <-- Changed to Departmental based on your update example!
                 compensation: "$65,000 - $85,000",
                 targetStartDate: "07/01/2026",
-                appCount: 22,
-                critCount: 8,
-                phoneCount: 4,
-                deptCount: 0,
+                appCount: 20,
+                critCount: 0,
+                phoneCount: 10,
+                deptCount: 2,
                 finalCount: 0,
                 offerCount: 0
             },
             {
                 jobTitle: "(Sr.) Digital Content Specialist",
+                openDate: "05/22/2026",
                 openings: 2,
                 hiringManager: "Bri MacBlane",
                 phase: "Phone",
@@ -141,7 +145,6 @@
             }
         ];
 
-        // Pipeline color badging configuration mapping
         const phaseBadges = {
             "Application": "bg-blue-50 text-blue-700 border-blue-200",
             "Criteria": "bg-purple-50 text-purple-700 border-purple-200",
@@ -163,7 +166,6 @@
         function buildDashboard() {
             const rowContainer = document.getElementById('dashboard-rows');
             const metricsContainer = document.getElementById('metrics-panel');
-            
             if (!rowContainer || !metricsContainer) return;
 
             let totalActive = 0;
@@ -172,9 +174,7 @@
             candidateRequisitions.forEach(item => {
                 const count = parseInt(item.openings, 10) || 0;
                 totalActive += count;
-                if (item.phase === "Offer") {
-                    totalOffers += count;
-                }
+                if (item.phase === "Offer") { totalOffers += count; }
             });
             
             metricsContainer.innerHTML = `
@@ -195,24 +195,18 @@
             rowContainer.innerHTML = '';
             candidateRequisitions.forEach((item, index) => {
                 const styleClass = phaseBadges[item.phase] || "bg-slate-100 text-slate-700 border-slate-200";
-                
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50/80 transition text-sm";
                 tr.innerHTML = `
                     <td class="px-6 py-4 font-bold text-sky-600 hover:text-sky-800 transition cursor-pointer underline decoration-sky-200 underline-offset-4" onclick="openModal(${index})">
                         ${item.jobTitle}
                     </td>
+                    <td class="px-6 py-4 text-slate-500 font-mono text-xs">${item.openDate}</td>
                     <td class="px-6 py-4 text-slate-600 font-medium">${item.openings}</td>
                     <td class="px-6 py-4 text-slate-600 font-medium">${item.hiringManager}</td>
-                    <td class="px-6 py-4">
-                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">
-                            ${item.phase}
-                        </span>
-                    </td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-md border ${styleClass}">${item.phase}</span></td>
                     <td class="px-6 py-4 font-mono text-slate-500 text-xs">${item.compensation}</td>
-                    <td class="px-6 py-4 text-slate-600 font-medium">
-                        <i class="fa-regular fa-calendar text-slate-400 mr-1.5 text-xs"></i> ${item.targetStartDate}
-                    </td>
+                    <td class="px-6 py-4 text-slate-600 font-medium"><i class="fa-regular fa-calendar text-slate-400 mr-1.5 text-xs"></i> ${item.targetStartDate}</td>
                 `;
                 rowContainer.appendChild(tr);
             });
@@ -258,16 +252,9 @@
             document.getElementById('pipeline-modal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('pipeline-modal').classList.add('hidden');
-        }
-
-        // Close on background click safely
+        function closeModal() { document.getElementById('pipeline-modal').classList.add('hidden'); }
         document.body.addEventListener('click', function(event) {
-            const modal = document.getElementById('pipeline-modal');
-            if (event.target === modal) {
-                closeModal();
-            }
+            if (event.target === document.getElementById('pipeline-modal')) { closeModal(); }
         });
 
         document.addEventListener('DOMContentLoaded', buildDashboard);
